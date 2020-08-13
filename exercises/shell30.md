@@ -126,8 +126,7 @@ yes
 ```bash
 #!/bin/bash
 read -p "Please import a backup dirname: " BakDir
-if [ ! -d $BakDir ] 
-then 
+if [ ! -d $BakDir ]; then 
     mkdir $BakDir
 fi
 ```
@@ -138,11 +137,11 @@ fi
 #!/bin/bash
 Process=`ps aux | grep portmap | grep -v grep`
 if [ -n $Process ] ; then
-if [ ! -f /etc/rc.d/init.d/portmap ] ; then
-echo "no portmap scipt file"
-fi
+	if [ ! -f /etc/rc.d/init.d/portmap ] ; then
+		echo "no portmap scipt file"
+	fi
 else
-echo "portmap sercice is running"
+	echo "portmap sercice is running"
 fi
 ```
 
@@ -152,10 +151,10 @@ fi
 #!/bin/bash
 Process=`ps -ef | grep "mysqld_safe" | grep -v "grep" | wc -l`
 if [  $Process != 0 ] ; then
-echo "Mysql Process is running"  >> /dev/null
+	echo "Mysql Process is running"  >> /dev/null
 else
-echo "`date +"%Y-%m-%d %H:%M:%S"` ERROR: Mysql Process is Not running" >> /var/log/messages
-/etc/init.d/mysqld start >> /dev/null
+	echo "`date +"%Y-%m-%d %H:%M:%S"` ERROR: Mysql Process is Not running" >> /var/log/messages
+	/etc/init.d/mysqld start >> /dev/null
 fi
 
 */5 * * * * /bin/bash /root/1.sh
@@ -165,8 +164,7 @@ fi
 
 ```bash
 #!/bin/bash
-for TM in "Morning" "Noon" "Evening"
-do
+for TM in "Morning" "Noon" "Evening"; do
     echo "The $TM of the day. "
 done
 ```
@@ -178,7 +176,7 @@ done
 User=`grep "/bin/bash" /etc/passwd | awk -F ':' '{print $1}'`
 Number=`find /opt -user $User | grep -v ^/opt$  | wc -l`
 if [  $Number -gt 100 ] ; then
-echo $User:$Number
+	echo $User:$Number
 fi
 ```
 
@@ -188,9 +186,8 @@ fi
 #!/bin/bash
 FileSize=$(ls -l $(find /etc -type f -name  *.conf ) | awk '{print $5}')
 total=0
-for i in $FileSize
-do
-total=$(expr $total + $i)
+for i in $FileSize; do
+	total=$(expr $total + $i)
 done
 echo "total size of conf file is $total"
 ```
@@ -203,9 +200,8 @@ echo "total size of conf file is $total"
 #!/bin/bash
 sum=0
 read -p "Please inport a >1 sumber : " Number
-for i in $Number
-do
-sum=$[$Number + $i]
+for i in $Number; do
+	sum=$[$Number + $i]
 done
 echo "Sum is $sum"
 ```
@@ -219,25 +215,23 @@ echo "Sum is $sum"
 ```bash
 #!/bin/bash
 if [ $1 == "add" ] ;then
-for i in `seq 1 20`
-do
-useradd stu$i >> /dev/null
-echo 123 | passwd --stdin stu$i
-echo "stu$i is create"
-done
+  for i in `seq 1 20`; do
+    useradd stu$i >> /dev/null
+    echo 123 | passwd --stdin stu$i
+    echo "stu$i is create"
+  done
 elif [ $1 == "del" ] ;then
-if [  -n `grep stu /etc/passwd` ] ;then
-echo "stu user is not create,please inport options add"
-exit 1
+	if [  -n `grep stu /etc/passwd` ] ;then
+		echo "stu user is not create,please inport options add"
+		exit 1
+	else
+    for i in `seq 1 20`; do
+      userdel -r stu$i
+      echo "stu$i is remove"
+    done
+	fi
 else
-for i in `seq 1 20`
-do
-userdel -r stu$i
-echo "stu$i is remove"
-done
-fi
-else
-echo "Please inport options add or del"
+	echo "Please inport options add or del"
 fi
 ```
 
@@ -252,13 +246,13 @@ m=`echo $Cha | sed s/[a-zA-Z]//g`
 n=`echo $Cha | sed s/[0-9]//g`
 s=`echo $Cha | sed s/[a-zA-Z0-9]//g`
 if [ -z $m  ] ; then
-echo "字母"
+	echo "字母"
 elif [ -z $n ] ; then
-echo "数字"
+	echo "数字"
 elif [ -z $s ] ; then
-echo "数字字母"
+	echo "数字字母"
 else
-echo "your input is 特殊字符"
+	echo "your input is 特殊字符"
 fi
 ```
 
@@ -278,13 +272,12 @@ echo $[$1+$2+3]
 
 ```bash
 #!/bin/bash
-while true
-do
-read -p "Please input a string: " Str
-echo $Str >> /tmp/test.txt
-if [ $Str == "end" ];then
-break
-fi
+while true; do
+	read -p "Please input a string: " Str
+	echo $Str >> /tmp/test.txt
+	if [ $Str == "end" ];then
+		break
+	fi
 done
 wc /tmp/test.txt && rm -rf /tmp/test.txt
 ```
@@ -293,13 +286,12 @@ wc /tmp/test.txt && rm -rf /tmp/test.txt
 
 ```bash
 #!/bin/bash
-for i in `seq 1 20`
-do
-if [ $i -eq 8 ] || [ $i -eq 18 ] ; then
-continue
-fi
-userdel -r stu$i >> /dev/nul
-echo "stu$i is remove"
+for i in `seq 1 20`; do
+	if [ $i -eq 8 ] || [ $i -eq 18 ] ; then
+	continue
+	fi
+	userdel -r stu$i >> /dev/nul
+	echo "stu$i is remove"
 done
 ```
 
@@ -310,18 +302,17 @@ done
 ```bash
 #!/bin/bash
 help() {
-echo "Usage: "$0" start|stop"
+	echo "Usage: "$0" start|stop"
+
+	case "$1" in
+		start)
+			echo "starting...";;
+		stop)
+			echo "stoping...";;
+	esac
 }
-case "$1" in
-start)
-echo "starting..."
-;;
-stop)
-echo "stoping..."
-;;
-*)
+
 help
-esac
 ```
 
 
@@ -331,7 +322,7 @@ esac
 ```bash
 #!/bin/bash
 sum() {
-echo `expr $1 + $2`
+	echo `expr $1 + $2`
 }
 sum 12 34
 sum 56 789
@@ -343,10 +334,10 @@ sum 56 789
 
 ```bash
 #!/bin/bash
-for i in `seq 1 100`
-do
+for i in `seq 1 100`; do
    sum=$[$sum+$i]
    echo $i
 done
-   echo $sum
+
+echo $sum
 ```
